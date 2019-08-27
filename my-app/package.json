@@ -14,14 +14,20 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@bit/akeshavan.mindlogger-web.input-selector": "0.0.23",
     "axios": "^0.17.1",
+    "babel-preset-es2015": "^6.24.1",
     "bootstrap": "^4.0.0-beta.2",
     "bootstrap-vue": "^1.0.2",
+    "elasticlunr": "^0.9.5",
+    "jsonld": "^1.2.1",
     "path.join": "^1.0.0",
     "store": "^2.0.12",
     "vue": "^2.5.2",
     "vue-axios": "^2.0.2",
-    "vue-router": "^3.0.1"
+    "vue-json-pretty": "^1.6.1",
+    "vue-router": "^3.0.1",
+    "vuedraggable": "^2.23.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -94,5 +100,10 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "bit": {
+    "env": {},
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
+  }
 }

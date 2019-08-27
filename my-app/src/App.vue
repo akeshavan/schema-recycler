@@ -12,7 +12,7 @@
 
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-      <b-navbar-brand href="#">my-app</b-navbar-brand>
+      <b-navbar-brand href="#">recycler</b-navbar-brand>
 
       <!-- If the viewport is small, the navbar collapses.
           Everything in b-collapse is what gets collapsed.
@@ -22,9 +22,6 @@
         <!--  Here are links to different routes  -->
         <b-navbar-nav>
           <b-nav-item to="/" exact>Home</b-nav-item>
-          <b-nav-item to="/about">About</b-nav-item>
-          <b-nav-item to="/coins/bitcoin">Bitcoin</b-nav-item>
-          <b-nav-item to="/coins/ethereum">Ethereum</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -32,7 +29,7 @@
           <!-- This part only displays if the user is authenticated -->
           <b-nav-item-dropdown right v-if="isAuthenticated">
             <template slot="button-content">
-              <em>{{userInfo.username}}</em>
+              <em>{{userInfo.login}}</em>
             </template>
             <b-dropdown-item to="/profile">Profile</b-dropdown-item>
             <b-dropdown-item @click="logout">Signout</b-dropdown-item>
@@ -74,7 +71,7 @@ export default {
     return {
       isAuthenticated: false,
       userInfo: {
-        username: null,
+        login: null,
       },
     };
   },
@@ -104,8 +101,10 @@ export default {
         self.isAuthenticated = true;
 
         // TODO: do stuff here, like setting user info variables
-        self.userInfo.username = resp.data.login;
-        self.userInfo.avatar = resp.data.avatar_url;
+        self.userInfo = resp.data //.login;
+        self.userInfo.token = token;
+        // self.userInfo.avatar = resp.data.avatar_url;
+
       }).catch(() => {
         self.logout();
       });
@@ -137,6 +136,6 @@ export default {
   }
 
   .router {
-    padding-top: 40px;
+    padding-top: 10px;
   }
 </style>

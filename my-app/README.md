@@ -6,6 +6,9 @@
 
 ``` bash
 # install dependencies
+npm config set @bit:registry https://node.bitsrc.io
+
+
 npm install
 
 # serve with hot reload at localhost:8080
