@@ -58,7 +58,6 @@ import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-import pathJoin from 'path.join';
 import axios from 'axios';
 import auth from './lib/auth';
 
@@ -93,7 +92,7 @@ export default {
       // If this fails, then our token is bad; we are NOT authenticated and
       // should be logged out
 
-      axios.get(pathJoin('https://api.github.com', 'user'), {
+      axios.get('https://api.github.com/user', {
         headers: {
           Authorization: `token ${token}`,
         },

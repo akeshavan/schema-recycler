@@ -22,7 +22,7 @@ function gup(url, name, win, callback) {
 
 function authenticateAgainstServer(code, callback) {
   const authUrl = location.hostname === 'localhost' || location.hostname === '127.0.0.1' ? config.devAuthUrl : config.prodAuthUrl;
-  const url = joinPath(authUrl, code);
+  const url = `${authUrl}${code}`;
   axios.get(url).then((resp) => {
     store.set('token', resp.data.token);
     callback(resp.data.token, null);
