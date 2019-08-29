@@ -148,19 +148,19 @@
 
 <script>
 import elasticlunr from 'elasticlunr';
-import draggable from "vuedraggable";
-import VueJsonPretty from 'vue-json-pretty'
+import draggable from 'vuedraggable';
+import VueJsonPretty from 'vue-json-pretty';
 import _ from 'lodash';
 import axios from 'axios';
 import Item from './Item';
 import items from '../assets/itemDump.json';
 
-var index = elasticlunr(function () {
-    this.addField('question');
-    this.addField('preamble');
-    this.addField('altLabel');
-    this.addField('prefLabel');
-    this.setRef('id');
+const index = elasticlunr(function el() {
+  this.addField('question');
+  this.addField('preamble');
+  this.addField('altLabel');
+  this.addField('prefLabel');
+  this.setRef('id');
 });
 
 _.map(items, (item, i) => index.addDoc({ ...item, id: i }));
@@ -170,7 +170,7 @@ export default {
   props: {
     userInfo: {
       type: Object,
-    }
+    },
   },
   components: {
     Item,
@@ -206,119 +206,118 @@ export default {
     },
   },
   methods: {
-    log: function(evt) {
+    log(evt) {
       window.console.log(evt);
       this.$forceUpdate();
     },
 
     saveActivity() {
-      const activity = { name: this.activityName, items: this.itemList }
+      const activity = { name: this.activityName, items: this.itemList };
       this.activityList.push(activity);
     },
 
     formatActivitySet() {
       const context = {
-        "@context": {
-            "@version": 1.1,
-            "activity_path": `https://raw.githubusercontent.com/${this.gh_user}/${this.gh_repo}/master/activities/`,
-        }
-      }
+        '@context': {
+          '@version': 1.1,
+          activity_path: `https://raw.githubusercontent.com/${this.gh_user}/${this.gh_repo}/master/activities/`,
+        },
+      };
 
       const schema = {
-        "@context": [ "https://raw.githubusercontent.com/ReproNim/schema-standardization/master/contexts/generic.jsonld",
-          `https://raw.githubusercontent.com/${this.gh_user}/${this.gh_repo}/master/activitySets/${this.activitySetName}/${this.activitySetName}_context.jsonld`
+        '@context': [
+          'https://raw.githubusercontent.com/ReproNim/schema-standardization/master/contexts/generic.jsonld',
+          `https://raw.githubusercontent.com/${this.gh_user}/${this.gh_repo}/master/activitySets/${this.activitySetName}/${this.activitySetName}_context.jsonld`,
         ],
-        "@type": "https://raw.githubusercontent.com/ReproNim/schema-standardization/master/schemas/ActivitySet.jsonld",
-        "schema:schemaVersion": "0.0.1",
-        "schema:version": "0.0.1",
-        "@id": this.activitySetName,
-        "skos:prefLabel": this.activitSetDetails.prefLabel,
-        "skos:altLabel": this.activitSetDetails.altLabel,
-        "schema:description": this.activitSetDetails.description,
-        "schema:about": this.activitSetDetails.about,
-        "schema:image": this.activitSetDetails.image,
-        "ui": {
+        '@type': 'https://raw.githubusercontent.com/ReproNim/schema-standardization/master/schemas/ActivitySet.jsonld',
+        'schema:schemaVersion': '0.0.1',
+        'schema:version': '0.0.1',
+        '@id': this.activitySetName,
+        'skos:prefLabel': this.activitSetDetails.prefLabel,
+        'skos:altLabel': this.activitSetDetails.altLabel,
+        'schema:description': this.activitSetDetails.description,
+        'schema:about': this.activitSetDetails.about,
+        'schema:image': this.activitSetDetails.image,
+        ui: {
           order: [],
           visibility: {},
         },
-        "variableMap": [],
-      }
+        variableMap: [],
+      };
 
       _.map(this.activityList, (act) => {
+        context['@context'][act.name] = {
+          '@id': `activity_path:${act.name}/${act.name}.jsonld`,
+          '@type': '@id',
+        };
 
-        context['@context'][act.name]= {
-                "@id": `activity_path:${act.name}/${act.name}.jsonld`,
-                "@type": "@id"
-            };
-
-        schema.ui['order'].push(act.name);
-        schema.ui['visibility'][act.name] = true;
+        schema.ui.order.push(act.name);
+        schema.ui.visibility[act.name] = true;
         schema.variableMap.push({
-          'variableName': act.name,
-          'isAbout': act.name,
+          variableName: act.name,
+          isAbout: act.name,
         });
       });
 
-      return {context, schema}
+      return { context, schema };
     },
 
     formatActivity(act) {
-      
       const schema = {
-        "@context": [ "https://raw.githubusercontent.com/ReproNim/schema-standardization/master/contexts/generic.jsonld",
-          `https://raw.githubusercontent.com/${this.gh_user}/${this.gh_repo}/master/activities/${act.name}/${act.name}_context.jsonld`
+        '@context': [
+          'https://raw.githubusercontent.com/ReproNim/schema-standardization/master/contexts/generic.jsonld',
+          `https://raw.githubusercontent.com/${this.gh_user}/${this.gh_repo}/master/activities/${act.name}/${act.name}_context.jsonld`,
         ],
-        "@type": "https://raw.githubusercontent.com/ReproNim/schema-standardization/master/schemas/Activity.jsonld",
-        "schema:schemaVersion": "0.0.1",
-        "schema:version": "0.0.1",
-        "@id": act.name,
-        "skos:prefLabel": "",
-        "skos:altLabel": "",
-        "schema:description": "",
-        "preamble": "",
-        "scoringLogic": {
+        '@type': 'https://raw.githubusercontent.com/ReproNim/schema-standardization/master/schemas/Activity.jsonld',
+        'schema:schemaVersion': '0.0.1',
+        'schema:version': '0.0.1',
+        '@id': act.name,
+        'skos:prefLabel': '',
+        'skos:altLabel': '',
+        'schema:description': '',
+        preamble: '',
+        scoringLogic: {
         },
-        "ui": {
-          order : [],
+        ui: {
+          order: [],
           visibility: {},
         },
-        "variableMap": [],
+        variableMap: [],
       };
 
       const context = {
-        "@context": {
-            "@version": 1.1,
-        }
-      }
+        '@context': {
+          '@version': 1.1,
+        },
+      };
 
       _.map(act.items, (item) => {
-        console.log('Items', item, this.allItems[item.ref]);
         const name = this.allItems[item.ref]['skos:altLabel'];
         context['@context'][name] = {
-          "@id": this.allItems[item.ref].url,
-          "@type": "@id"
+          '@id': this.allItems[item.ref].url,
+          '@type': '@id',
         };
 
-        schema.ui['order'].push(name);
-        schema.ui['visibility'][name] = true;
+        schema.ui.order.push(name);
+        schema.ui.visibility[name] = true;
         schema.variableMap.push({
-          'variableName': name,
-          'isAbout': name,
+          variableName: name,
+          isAbout: name,
         });
       });
 
-      return { schema, context }
+      return { schema, context };
     },
 
     async getFileContents(path) {
       const token = this.userInfo.token;
       const url = `https://api.github.com/repos/${this.gh_user}/${this.gh_repo}/contents/${path}`;
-      return await axios.get(url,
-      {
-        headers: {
-          Authorization: `token ${token}`,
-        },
-      });
+      return axios.get(url,
+        {
+          headers: {
+            Authorization: `token ${token}`,
+          },
+        });
     },
 
     async updateFileContents(path, sha, content) {
@@ -327,70 +326,75 @@ export default {
       const data = {
         message: `creating file ${path}`,
         content: btoa(JSON.stringify(content)),
-      }
+      };
 
       if (sha) {
         data.sha = sha;
       }
 
-      return await axios({
+      return axios({
         url,
         method: 'put',
         data,
         headers: {
           Authorization: `token ${token}`,
-          },
+        },
       });
     },
 
     async pushLDToGitHub(path, content) {
-      return await this.getFileContents(path).then((resp) => {
+      return this.getFileContents(path).then((resp) => {
         this.updateFileContents(path, resp.data.sha, content);
-      }).catch((e) => {
+      }).catch(() => {
         this.updateFileContents(path, null, content);
-      })
+      });
     },
 
-    async pushSchemaAndContext(schema_path, schema, context_path, context) {
-      return await this.pushLDToGitHub(schema_path, schema).then(()=>{
-        setTimeout(() => this.pushLDToGitHub(context_path, context), 2000);
+    async pushSchemaAndContext(schemaPath, schema, contextPath, context) {
+      return this.pushLDToGitHub(schemaPath, schema).then(() => {
+        setTimeout(() => this.pushLDToGitHub(contextPath, context), 2000);
       });
     },
 
     pushToGitHub() {
+      // eslint-disable-next-line
       console.log('hello, pushing...');
 
-      const schema_path = `activitySets/${this.activitySetName}/${this.activitySetName}_schema.jsonld`;
-      const context_path = `activitySets/${this.activitySetName}/${this.activitySetName}_context.jsonld`;
-      
+      const schemaPath = `activitySets/${this.activitySetName}/${this.activitySetName}_schema.jsonld`;
+      const contextPath = `activitySets/${this.activitySetName}/${this.activitySetName}_context.jsonld`;
+
       const { context, schema } = this.formatActivitySet();
 
-      this.pushSchemaAndContext(schema_path, schema, context_path, context)
+      this.pushSchemaAndContext(schemaPath, schema, contextPath, context);
 
 
-      _.map(this.activityList, (act, index) => {
-        const { context, schema } = this.formatActivity(act);
-        const schema_path = `activities/${act.name}/${act.name}_schema.jsonld`;
-        const context_path = `activities/${act.name}/${act.name}_context.jsonld`;
+      _.map(this.activityList, (act, idx) => {
+        const { contextAct, schemaAct } = this.formatActivity(act);
+        const schemaActPath = `activities/${act.name}/${act.name}_schema.jsonld`;
+        const contextActPath = `activities/${act.name}/${act.name}_context.jsonld`;
 
-        setTimeout(() => this.pushSchemaAndContext(schema_path, schema, context_path, context), (index+2)*3500);
+        setTimeout(() =>
+          this.pushSchemaAndContext(schemaActPath, schemaAct, contextActPath, contextAct),
+          (idx + 2) * 3500);
       });
     },
-
+    // eslint-disable-next-line
     removeItem(index) {
-      //TODO: remove an item from itemList by its index
+      // TODO: remove an item from itemList by its index
     },
+    // eslint-disable-next-line
     moveItemUp(index) {
       // TODO: move an item up
     },
+    // eslint-disable-next-line
     moveItemDown(index) {
       // TODO: move an item down
-    }
+    },
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
   font-weight: normal;

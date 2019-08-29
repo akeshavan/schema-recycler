@@ -101,10 +101,9 @@ export default {
         self.isAuthenticated = true;
 
         // TODO: do stuff here, like setting user info variables
-        self.userInfo = resp.data //.login;
+        self.userInfo = resp.data; // .login;
         self.userInfo.token = token;
         // self.userInfo.avatar = resp.data.avatar_url;
-
       }).catch(() => {
         self.logout();
       });

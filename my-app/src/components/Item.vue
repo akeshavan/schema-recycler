@@ -37,7 +37,7 @@ export default {
   props: {
     item: {
       type: Object,
-    }
+    },
   },
   components: {
     InputSelector,
@@ -48,10 +48,10 @@ export default {
     },
     valueConstraints() {
       if (this.status === 'ready') {
-        return  this.expanded[0]['https://schema.repronim.org/valueconstraints'][0];
+        return this.expanded[0]['https://schema.repronim.org/valueconstraints'][0];
       }
       return [];
-    }
+    },
   },
   data() {
     return {
@@ -61,27 +61,29 @@ export default {
   },
   methods: {
     async expandLD(item) {
-      return await jsonld.expand(item)
-    }
+      return jsonld.expand(item);
+    },
   },
   mounted() {
     this.expandLD(this.item).then((resp) => {
       this.expanded = resp;
       const val = this.expanded[0]['https://schema.repronim.org/valueconstraints'][0];
+      // eslint-disable-next-line
       console.log('VAL IS', val);
       if (val['@id']) {
         this.status = 'loading';
-        const data = this.expandLD(val['@id']).then((resp) => {
-          this.expanded[0]['https://schema.repronim.org/valueconstraints'] = resp;
+        this.expandLD(val['@id']).then((resp1) => {
+          this.expanded[0]['https://schema.repronim.org/valueconstraints'] = resp1;
           this.status = 'ready';
+          // eslint-disable-next-line
           console.log('THEN', this.expanded[0]['https://schema.repronim.org/valueconstraints']);
         });
       } else {
         this.status = 'ready';
       }
-    }).catch((e) => {
-      this.status= 'error';
+    }).catch(() => {
+      this.status = 'error';
     });
-  }
-}
+  },
+};
 </script>

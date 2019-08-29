@@ -20,6 +20,7 @@
     "bootstrap-vue": "^1.0.2",
     "elasticlunr": "^0.9.5",
     "jsonld": "^1.2.1",
+    "lodash": "^4.17.15",
     "path.join": "^1.0.0",
     "store": "^2.0.12",
     "vue": "^2.5.2",
