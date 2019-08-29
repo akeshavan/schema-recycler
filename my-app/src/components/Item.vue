@@ -69,14 +69,14 @@ export default {
       this.expanded = resp;
       const val = this.expanded[0]['https://schema.repronim.org/valueconstraints'][0];
       // eslint-disable-next-line
-      console.log('VAL IS', val);
+      // console.log('VAL IS', val);
       if (val['@id']) {
         this.status = 'loading';
         this.expandLD(val['@id']).then((resp1) => {
           this.expanded[0]['https://schema.repronim.org/valueconstraints'] = resp1;
           this.status = 'ready';
           // eslint-disable-next-line
-          console.log('THEN', this.expanded[0]['https://schema.repronim.org/valueconstraints']);
+          // console.log('THEN', this.expanded[0]['https://schema.repronim.org/valueconstraints']);
         });
       } else {
         this.status = 'ready';

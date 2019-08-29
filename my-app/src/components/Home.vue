@@ -12,7 +12,14 @@
   <b-row>
     <b-col cols="4" id="itemList">
       <h4>Items</h4>
-      <b-input v-model="search" class="mb-3" placeholder="search"></b-input>
+      <b-row>
+        <b-col :cols="8">
+          <b-input v-model="search" class="mb-3" placeholder="search"></b-input>
+        </b-col>
+        <b-col :cols="4">
+          <b-button @click="searchForItems">Search</b-button>
+        </b-col>
+      </b-row>
       <draggable
         class="dragArea list-group"
         :list="items"
@@ -155,11 +162,13 @@ import axios from 'axios';
 import Item from './Item';
 import items from '../assets/itemDump.json';
 
+elasticlunr.clearStopWords();
 const index = elasticlunr(function el() {
   this.addField('question');
   this.addField('preamble');
   this.addField('altLabel');
   this.addField('prefLabel');
+  this.addField('inputType');
   this.setRef('id');
 });
 
@@ -182,6 +191,7 @@ export default {
       index,
       search: 'sleep',
       allItems: items,
+      items: [],
       itemList: [],
       activityList: [],
       activityName: 'new_activity',
@@ -198,17 +208,20 @@ export default {
     };
   },
   computed: {
-    items() {
-      return this.index.search(this.search);
-    },
     formattedActivitySet() {
       return this.formatActivitySet();
     },
   },
+  mounted() {
+    this.searchForItems();
+  },
   methods: {
+    searchForItems() {
+      this.items = this.index.search(this.search);
+    },
     log(evt) {
       window.console.log(evt);
-      this.$forceUpdate();
+      // this.$forceUpdate();
     },
 
     saveActivity() {
@@ -226,10 +239,10 @@ export default {
 
       const schema = {
         '@context': [
-          'https://raw.githubusercontent.com/ReproNim/schema-standardization/master/contexts/generic.jsonld',
+          'https://raw.githubusercontent.com/ReproNim/schema-standardization/master/contexts/generic',
           `https://raw.githubusercontent.com/${this.gh_user}/${this.gh_repo}/master/activitySets/${this.activitySetName}/${this.activitySetName}_context.jsonld`,
         ],
-        '@type': 'https://raw.githubusercontent.com/ReproNim/schema-standardization/master/schemas/ActivitySet.jsonld',
+        '@type': 'https://raw.githubusercontent.com/ReproNim/schema-standardization/master/schemas/ActivitySet',
         'schema:schemaVersion': '0.0.1',
         'schema:version': '0.0.1',
         '@id': this.activitySetName,
@@ -369,10 +382,11 @@ export default {
 
 
       _.map(this.activityList, (act, idx) => {
-        const { contextAct, schemaAct } = this.formatActivity(act);
+        const actf = this.formatActivity(act);
+        const schemaAct = actf.schema;
+        const contextAct = actf.context;
         const schemaActPath = `activities/${act.name}/${act.name}_schema.jsonld`;
         const contextActPath = `activities/${act.name}/${act.name}_context.jsonld`;
-
         setTimeout(() =>
           this.pushSchemaAndContext(schemaActPath, schemaAct, contextActPath, contextAct),
           (idx + 2) * 3500);

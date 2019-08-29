@@ -21,7 +21,8 @@ function gup(url, name, win, callback) {
 }
 
 function authenticateAgainstServer(code, callback) {
-  const url = joinPath(config.authUrl, code);
+  const authUrl = location.hostname === 'localhost' || location.hostname === '127.0.0.1' ? config.devAuthUrl : config.prodAuthUrl;
+  const url = joinPath(authUrl, code);
   axios.get(url).then((resp) => {
     store.set('token', resp.data.token);
     callback(resp.data.token, null);
@@ -52,8 +53,10 @@ function getGithubCode(_url, REDIRECT, callback) {
 export default {
 
   login(callback) {
-    const url = `https://github.com/login/oauth/authorize?client_id=${config.clientId}&scope=repo`;
-    getGithubCode(url, config.redirectUri, callback);
+    const clientId = location.hostname === 'localhost' || location.hostname === '127.0.0.1' ? config.devClientId : config.prodClientId;
+    const redirectUri = location.hostname === 'localhost' || location.hostname === '127.0.0.1' ? config.devRedirectUri : config.prodRedirectUri;
+    const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=repo`;
+    getGithubCode(url, redirectUri, callback);
   },
 
   logout() {
