@@ -17,7 +17,7 @@
     "@bit/akeshavan.mindlogger-web.input-selector": "0.0.23",
     "axios": "^0.17.1",
     "bootstrap": "^4.0.0-beta.2",
-    "bootstrap-vue": "^1.0.2",
+    "bootstrap-vue": "^2.0.0",
     "elasticlunr": "^0.9.5",
     "jsonld": "^1.2.1",
     "lodash": "^4.17.15",
